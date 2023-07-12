@@ -20,25 +20,54 @@ const ExpenseInput = () => {
   const [text, setText] = useState();
   const [expenseAmount, setAmount] = useState();
 
+  const [errorText, setErrorText] = useState(false);
+  const [errorAmount, setErrorAmount] = useState(false);
+
+  // let errorText = false;
+
   const addExpenseHandler = () => {
     const id = Date.now();
-    const expense = { id: id, title: text, amount: parseInt(expenseAmount) };
-    dispatch(addExpense(expense));
-    navigation.navigate("All");
+    setErrorAmount(false);
+    setErrorAmount(false);
+    if (
+      typeof text === "undefined" ||
+      text.trim().length === 0 ||
+      typeof expenseAmount === "undefined" ||
+      expenseAmount.trim().length === 0
+    ) {
+      setErrorText(true);
+      setErrorAmount(true);
+    } else {
+      const expense = {
+        id: id,
+        title: text,
+        amount: parseInt(expenseAmount),
+        date: Date.now(),
+      };
+      dispatch(addExpense(expense));
+      navigation.navigate("All");
+    }
   };
 
   return (
-    <View>
+    <View style={styles.mainContainer}>
       <View>
-        <Text>Expense title</Text>
-        <TextInput style={styles.input(width)} onChangeText={setText} />
+        <Text style={styles.inputTitle}>Expense title</Text>
+        <TextInput
+          style={styles.input(width)}
+          onChangeText={setText}
+          placeholder={errorText ? "Must enter title" : null}
+          placeholderTextColor={"red"}
+        />
       </View>
       <View>
-        <Text>Expense amount</Text>
+        <Text style={styles.inputTitle}>Expense amount</Text>
         <TextInput
           onChangeText={setAmount}
           style={styles.input(width)}
           keyboardType="numeric"
+          placeholder={errorAmount ? "Must enter value" : null}
+          placeholderTextColor={"red"}
         />
       </View>
       <View style={styles.buttonsContainer}>
@@ -57,12 +86,13 @@ const ExpenseInput = () => {
 };
 
 const styles = StyleSheet.create({
-  //   mainContainer: (height) => ({
-  //     height: height,
-  //   }),
+  mainContainer: {
+    maxWidth: "98%",
+    alignItems: "center",
+  },
   input: (width) => ({
     width: width * 0.9,
-    margin: 12,
+    marginVertical: 12,
     borderWidth: 1,
     padding: 10,
   }),
@@ -76,6 +106,9 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: "#777",
     flex: 1,
+  },
+  inputTitle: {
+    fontSize: 20,
   },
 });
 

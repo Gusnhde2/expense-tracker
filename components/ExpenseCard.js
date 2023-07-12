@@ -3,13 +3,17 @@ import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { deleteExpense } from "../store/expenseSlice";
+import { getDate } from "../functions/date";
 
 const ExpenseCard = ({ item }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [expanded, setExpanded] = useState(false);
+  const date = getDate(item.date);
   const expandHandler = () => {
     setExpanded((prevState) => !prevState);
+
+    // console.log();
   };
 
   const deleteHandler = () => {
@@ -31,6 +35,7 @@ const ExpenseCard = ({ item }) => {
           <Text style={{ fontSize: 25 }}>{item.amount} KM</Text>
         </View>
       </View>
+      <Text style={{ padding: 8, fontSize: 18 }}>Date: {date}</Text>
       {expanded ? (
         <View style={{ flexDirection: "row", gap: 20 }}>
           <View style={{ flex: 1 }}>
